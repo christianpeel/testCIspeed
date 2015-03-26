@@ -13,7 +13,8 @@ begin
     # we'll just let them sit here for now
     csdata = Dict()
     csdata["commitid"] = hex(LibGit2.revparse(repo,"HEAD"))
-    csdata["project"] = "Julia $VERSION"
+#    csdata["project"] = "Julia $VERSION"
+    csdata["project"] = "Julia"
     csdata["branch"] = Base.GIT_VERSION_INFO.branch
 #    csdata["executable"] = ENV["JULIA_FLAVOR"]
 #    csdata["executable"] = Sys.cpu_info()[1].model
