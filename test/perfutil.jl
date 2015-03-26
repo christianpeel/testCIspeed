@@ -16,7 +16,8 @@ begin
     csdata["project"] = "Julia $VERSION"
     csdata["branch"] = Base.GIT_VERSION_INFO.branch
 #    csdata["executable"] = ENV["JULIA_FLAVOR"]
-    csdata["executable"] = Sys.cpu_info()[1].model
+#    csdata["executable"] = Sys.cpu_info()[1].model
+    csdata["executable"] = "TestExecutable"
 #    csdata["environment"] = chomp(readall(`hostname`))
     csdata["environment"] = Sys.MACHINE
     csdata["result_date"] = join( split(Base.GIT_VERSION_INFO.date_string)[1:2], " " )    #Cut the timezone out
