@@ -20,7 +20,8 @@ begin
 #    csdata["executable"] = Sys.cpu_info()[1].model
     csdata["executable"] = "TestExecutable"
 #    csdata["environment"] = chomp(readall(`hostname`))
-    csdata["environment"] = Sys.MACHINE
+#    csdata["environment"] = Sys.MACHINE
+    csdata["environment"] = "TestEnvironment"
     csdata["result_date"] = join( split(Base.GIT_VERSION_INFO.date_string)[1:2], " " )    #Cut the timezone out
 
     close(repo)
