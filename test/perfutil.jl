@@ -7,22 +7,18 @@ begin
     using LibGit2
 
     repo = GitRepo(".");
-    # Ensure that we've got the environment variables we want:
-    # if !haskey(ENV, "JULIA_FLAVOR")
-    #     error( "You must provide the JULIA_FLAVOR environment variable identifying this julia build!" )
-    # end
 
-    # Setup codespeed data dict for submissions to codespeed's JSON endpoint.  These parameters
-    # are constant across all benchmarks, so we'll just let them sit here for now
+    # Setup codespeed data dict for submissions to codespeed's JSON
+    # endpoint.  These parameters are constant across all benchmarks, so
+    # we'll just let them sit here for now
     csdata = Dict()
     csdata["commitid"] = hex(LibGit2.revparse(repo,"HEAD"))
-    csdata["project"] = "Julia"
+    csdata["project"] = "Julia $VERSION"
     csdata["branch"] = Base.GIT_VERSION_INFO.branch
 #    csdata["executable"] = ENV["JULIA_FLAVOR"]
-    csdata["executable"] = "TestExecutable"
+    csdata["executable"] = Sys.cpu_info()[1].model
 #    csdata["environment"] = chomp(readall(`hostname`))
-#    cpu = Sys.cpu_info();  # See other functions in Sys.[tab]
-    csdata["environment"] = "TestEnvironment"
+    csdata["environment"] = Sys.MACHINE
     csdata["result_date"] = join( split(Base.GIT_VERSION_INFO.date_string)[1:2], " " )    #Cut the timezone out
 
     close(repo)
