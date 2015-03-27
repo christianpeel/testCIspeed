@@ -1,5 +1,8 @@
-import Base.Sort: QuickSort, MergeSort, InsertionSort
+#import Base.Sort: QuickSort, MergeSort, InsertionSort
 include("perfutil.jl")
+
+# Just in case any BLAS calls are made.
+blas_set_num_threads(1);
 
 ntrials = 5;
 
@@ -11,9 +14,9 @@ randfn! = randstr_fn!(10);
 for size in [2^6,2^16]
     data = Array(String, size)
     gc()
-    s = QuickSort;
 
     ## Random
+    #s = QuickSort;
     # name = "$(typename)_$(size)_$(string(s)[1:end-5])_random"
     # desc = "$(string(s)) run on $(size) $(typename) elements in random order"
     # @cputimeit_init(sort!(data), randfn!(data), name, "", "sort")
@@ -25,10 +28,15 @@ for size in [2^6,2^16]
     @timeit_init(sort!(data), randfn!(data), name, desc, "sort")
 end
 
-@cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")
-@timeit_init(sleep(0.01),   [],"sleep_p01_time","time of sleep for .01s","sleep")
-@cputimeit_init(sleep(10.0),[],"sleep_10_cput", "CPU time of sleep for 10s","sleep")
-@timeit_init(sleep(10.0),   [],"sleep_10_time", "time of sleep for 10s","sleep")
+@cputimeit_init(sleep(0.01),[],"sleep_p01_cput","","sleep")
+@timeit_init(sleep(0.01),   [],"sleep_p01_time","","sleep")
+@cputimeit_init(sleep(10.0),[],"sleep_10_cput", "","sleep")
+@timeit_init(sleep(10.0),   [],"sleep_10_time", "","sleep")
+
+# @cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")
+# @timeit_init(sleep(0.01),   [],"sleep_p01_time","time of sleep for .01s","sleep")
+# @cputimeit_init(sleep(10.0),[],"sleep_10_cput", "CPU time of sleep for 10s","sleep")
+# @timeit_init(sleep(10.0),   [],"sleep_10_time", "time of sleep for 10s","sleep")
 
 # Send system data to codespeed
 @output_timings(Sys.CPU_CORES,          "Sys.cores","number of CPU cores","")
