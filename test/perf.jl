@@ -32,16 +32,11 @@ for size in [2^6,2^16]
     gc()
     name = "fft_$(size)_cputime"
     desc = "cpu-timed fft on $(size) vector of randn"
-    @cputimeit_init(fft(randn(size,1))), fft(randn(size,1)), name, desc, "fftCPU")
+    @cputimeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftCPU")
     name = "fft_$(size)_clktime"
     desc = "clock-timed fft on $(size) vector of randn"
-    @cputimeit_init(fft(randn(size,1))), fft(randn(size,1)), name, desc, "fftckl")
+    @cputimeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftclk")
 end
-
-# @cputimeit_init(sleep(0.01),[],"sleep_p01_cput","","sleep")
-# @timeit_init(sleep(0.01),   [],"sleep_p01_time","","sleep")
-# @cputimeit_init(sleep(10.0),[],"sleep_10_cput", "","sleep")
-# @timeit_init(sleep(10.0),   [],"sleep_10_time", "","sleep")
 
 @cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")
 @timeit_init(sleep(0.01),   [],"sleep_p01_time","time of sleep for .01s","sleep")
