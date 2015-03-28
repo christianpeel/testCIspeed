@@ -1,57 +1,53 @@
-using JSON
-using HTTPClient.HTTPC
-using LibGit2
-using Dates
-
 const mintrials = 10
 const mintime = 2000.0
-
-
-
-
-#
-# Fill common JSON fields
-#
-
 if length(ARGS)>0
     environment = ARGS[1]
 else
     environment = "TestEnv"
 end
 
-repo = GitRepo(".");
+#
+# Fill common JSON fields
+#
+begin
+    using JSON
+    using HTTPClient.HTTPC
+    using LibGit2
+    using Dates
 
-println("environment: $(environment)")
-println("Sys.Machine: $(Sys.MACHINE)")
-println("Julia $VERSION")
-Sys.cpu_summary()
+    repo = GitRepo(".");
 
-# Setup codespeed data dict for submissions to codespeed's JSON
-# endpoint.  These parameters are constant across all benchmarks, so
-# we'll just let them sit here for now
-csdata = Dict()
-csdata["commitid"] = hex(LibGit2.revparse(repo,"HEAD"))
-# to-do: branch from LibGit2, rather than from Base
-csdata["branch"] = Base.GIT_VERSION_INFO.branch
+    println("environment: $(environment)")
+    println("Sys.Machine: $(Sys.MACHINE)")
+    println("Julia $VERSION")
+    Sys.cpu_summary()
 
-csdata["environment"] = environment
+    # Setup codespeed data dict for submissions to codespeed's JSON
+    # endpoint.  These parameters are constant across all benchmarks, so
+    # we'll just let them sit here for now
+    csdata = Dict()
+    csdata["commitid"] = hex(LibGit2.revparse(repo,"HEAD"))
+    # csdata["project"] = "Julia $VERSION"
+    csdata["project"] = "Julia0"
+    # to-do: branch for this repo (LibGit2), rather than from Base
+    csdata["branch"] = Base.GIT_VERSION_INFO.branch
 
-# csdata["project"] = "Julia $VERSION"
-csdata["project"] = "Julia0"
+    #    csdata["executable"] = Sys.cpu_info()[1].model
+    #    csdata["executable"] = Sys.MACHINE
+    csdata["executable"] = "TestExe"
+    csdata["environment"] = environment
 
-#    csdata["executable"] = Sys.cpu_info()[1].model
-#    csdata["executable"] = Sys.MACHINE
-csdata["executable"] = "TestExe"
 
-# to-do: get date/time of LibGit2 commit, rather than current date/time
-aa = now();
-dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
-                       hour(aa),minute(aa),second(aa))
-                       csdata["result_date"] = dateAndTime
 
-close(repo)
-LibGit2.free!(repo)
+    # to-do: get date/time of LibGit2 commit, rather than current date/time
+    aa = now();
+    dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
+                           hour(aa),minute(aa),second(aa))
+    csdata["result_date"] = dateAndTime
 
+    close(repo)
+    LibGit2.free!(repo)
+end
 #
 # End of filling common JSON fields
 #
