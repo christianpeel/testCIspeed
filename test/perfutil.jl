@@ -6,6 +6,9 @@ else
     environment = "TestEnv"
 end
 
+#
+# Fill common JSON fields
+#
 begin
     using JSON
     using HTTPClient.HTTPC
@@ -14,25 +17,32 @@ begin
 
     repo = GitRepo(".");
 
+    println("environment: $(environment)")
+    println("Sys.Machine: $(Sys.MACHINE)")
+    println("Julia $VERSION")
+    Sys.cpu_summary()
+
     # Setup codespeed data dict for submissions to codespeed's JSON
     # endpoint.  These parameters are constant across all benchmarks, so
     # we'll just let them sit here for now
     csdata = Dict()
     csdata["commitid"] = hex(LibGit2.revparse(repo,"HEAD"))
-#    csdata["project"] = "Julia $VERSION"
-    csdata["project"] = "Julia0"
+    csdata["project"] = "Julia $VERSION"
+    #csdata["project"] = "Julia0"
+    # to-do: branch for this repo (LibGit2), rather than from Base
     csdata["branch"] = Base.GIT_VERSION_INFO.branch
-#    csdata["executable"] = ENV["JULIA_FLAVOR"]
+
 #    csdata["executable"] = Sys.cpu_info()[1].model
-    csdata["executable"] = "TestExe"
-#    csdata["environment"] = chomp(readall(`hostname`))
-#    csdata["environment"] = Sys.MACHINE
+    csdata["executable"] = Sys.MACHINE
+    # csdata["executable"] = "TestExe"
+# csdata["environment"] = chomp(readall(`hostname`))
+# csdata["environment"] = Sys.MACHINE
     csdata["environment"] = environment
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
     csdata["result_date"] = dateAndTime
-    # to-do: get date/time of commit, rather than current date/time
+    # to-do: get date/time of LibGit2 commit, rather than current date/time
 
     close(repo)
     LibGit2.free!(repo)

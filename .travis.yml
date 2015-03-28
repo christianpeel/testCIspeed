@@ -4,4 +4,4 @@ notifications:
 script:
   # Wake codespeed.herokuapp.com up
   - curl -o tmp.html codespeed.herokuapp.com
-  - julia -e 'include("juliarc.jl"); include("test/perf.jl")'
+  - julia -e 'include("juliarc.jl"); include("test/perf.jl")' Travis
