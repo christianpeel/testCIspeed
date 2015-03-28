@@ -7,6 +7,9 @@ begin
     using LibGit2
 
     repo = GitRepo(".");
+    aa = now();
+    dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),...
+                                               hour(aa),minute(aa),second(aa))
 
     # Setup codespeed data dict for submissions to codespeed's JSON
     # endpoint.  These parameters are constant across all benchmarks, so
@@ -22,7 +25,9 @@ begin
 #    csdata["environment"] = chomp(readall(`hostname`))
 #    csdata["environment"] = Sys.MACHINE
     csdata["environment"] = "TestEnv"
-    csdata["result_date"] = join( split(Base.GIT_VERSION_INFO.date_string)[1:2], " " )    #Cut the timezone out
+    csdata["result_date"] = dateAndTime
+    # to-do: get date/time of commit, rather than current date/time
+#   csdata["result_date"] = join( split(Base.GIT_VERSION_INFO.date_string)[1:2]," ")
 
     close(repo)
     LibGit2.free!(repo)
