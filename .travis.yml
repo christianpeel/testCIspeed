@@ -1,4 +1,7 @@
 language: julia
+os:
+  - linux
+  - osx
 notifications:
     email: false
 script:
