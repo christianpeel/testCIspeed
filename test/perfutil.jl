@@ -1,5 +1,10 @@
 const mintrials = 10
 const mintime = 2000.0
+if length(ARGS)>0
+    environment = ARGS[1]
+else
+    environment = "TestEnv"
+end
 
 begin
     using JSON
@@ -7,9 +12,6 @@ begin
     using LibGit2
 
     repo = GitRepo(".");
-    aa = now();
-    dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),...
-                                               hour(aa),minute(aa),second(aa))
 
     # Setup codespeed data dict for submissions to codespeed's JSON
     # endpoint.  These parameters are constant across all benchmarks, so
@@ -24,16 +26,19 @@ begin
     csdata["executable"] = "TestExe"
 #    csdata["environment"] = chomp(readall(`hostname`))
 #    csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = "TestEnv"
+    csdata["environment"] = environment
+    aa = now();
+    dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),...
+                                               hour(aa),minute(aa),second(aa))
     csdata["result_date"] = dateAndTime
     # to-do: get date/time of commit, rather than current date/time
-#   csdata["result_date"] = join( split(Base.GIT_VERSION_INFO.date_string)[1:2]," ")
 
     close(repo)
     LibGit2.free!(repo)
 end
 
-# Takes in the raw array of values in vals, along with the benchmark name, description, unit and whether less is better
+# Takes in the raw array of values in vals, along with the benchmark name,
+# description, unit and whether less is better
 function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
     # Points to the server
     #codespeed_host = "julia-codespeed.csail.mit.edu"
