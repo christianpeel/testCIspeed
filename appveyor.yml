@@ -7,6 +7,12 @@ skip_commits:
   # Add [ci skip] to commit messages for docfixes, etc to reduce load on queue
   message: /\[av skip\]/
 
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false
+
 install:
   # if there's a newer build queued for the same PR, cancel this one
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
@@ -14,13 +20,15 @@ install:
       Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
       throw "There are newer queued builds for this pull request, failing early." }
   # Download most recent Julia Windows binary
-  - ps: (new-object net.webclient).DownloadFile($("http://status.julialang.org/"+$env:JULIAVERSION), "C:\projects\julia-binary.exe")
+  #- ps: (new-object net.webclient).DownloadFile($("http://status.julialang.org/"+$env:JULIAVERSION), "C:\projects\julia-binary.exe")
+  - ps: (new-object net.webclient).DownloadFile($("http://status.julialang.org/"+$env:JULIAVERSION), "./julia-binary.exe")
 
   # Run installer silently, output to C:\projects\julia
-  - C:\projects\julia-binary.exe /S /D=C:\projects\julia
+  #- C:\projects\julia-binary.exe /S /D=C:\projects\julia
+  - ./julia-binary.exe
 
 test_script:
   # Wake codespeed.herokuapp.com up
   - ps: (new-object net.webclient).DownloadFile($("http://codespeed.herokuapp.com/")
   #- curl -o tmp.html codespeed.herokuapp.com
-  - C:\projects\julia\bin\julia-debug -e 'include("juliarc.jl"); include("test/perf.jl")' Appveyor
+  - ./bin/julia -e 'include("juliarc.jl"); include("test/perf.jl")' Appveyor
