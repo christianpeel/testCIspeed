@@ -1,7 +1,7 @@
 environment:
   matrix:
     - JULIAVERSION: "stable/win32"
-    - JULIAVERSION: "stable/win64"
+    #- JULIAVERSION: "stable/win64"
 
 skip_commits:
   # Add [ci skip] to commit messages for docfixes, etc to reduce load on queue
@@ -21,14 +21,14 @@ install:
       throw "There are newer queued builds for this pull request, failing early." }
   # Download most recent Julia Windows binary
   #- ps: (new-object net.webclient).DownloadFile($("http://status.julialang.org/"+$env:JULIAVERSION), "C:\projects\julia-binary.exe")
-  - ps: (new-object net.webclient).DownloadFile($("http://status.julialang.org/"+$env:JULIAVERSION), "./julia-binary.exe")
+  - ps: (new-object net.webclient).DownloadFile($("http://status.julialang.org/"+$env:JULIAVERSION), "julia-binary.exe")
 
   # Run installer silently, output to C:\projects\julia
   #- C:\projects\julia-binary.exe /S /D=C:\projects\julia
-  - ./julia-binary.exe
+  - julia-binary.exe
 
 test_script:
   # Wake codespeed.herokuapp.com up
   - ps: (new-object net.webclient).DownloadFile($("http://codespeed.herokuapp.com/")
   #- curl -o tmp.html codespeed.herokuapp.com
-  - ./bin/julia -e 'include("juliarc.jl"); include("test/perf.jl")' Appveyor
+  - bin\julia -e 'include("juliarc.jl"); include("test/perf.jl")' Appveyor
