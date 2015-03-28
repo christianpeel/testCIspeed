@@ -28,7 +28,7 @@ begin
 #    csdata["environment"] = Sys.MACHINE
     csdata["environment"] = environment
     aa = now();
-    dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),...
+    dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
     csdata["result_date"] = dateAndTime
     # to-do: get date/time of commit, rather than current date/time
