@@ -42,7 +42,7 @@ for size in [2^5,2^7]
     name = "matMul_$(size)_cputime"
     desc = "cpu-timed matrix multiply on $(size)x$(size) random matrices"
     @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulCPU")
-    name = "fft_$(size)_clktime"
+    name = "matMul_$(size)_clktime"
     desc = "clock-timed matrix multiply on $(size)x$(size) random matrices"
     @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulclk")
 end
