@@ -37,11 +37,20 @@ end
 #     desc = "clock-timed fft on $(size) vector of randn"
 #     @cputimeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftclk")
 # end
+for size in [2^5,2^7]
+    gc()
+    name = "matMul_$(size)_cputime"
+    desc = "cpu-timed matrix multiply on $(size)x$(size) random matrices"
+    @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulCPU")
+    name = "fft_$(size)_clktime"
+    desc = "clock-timed matrix multiply on $(size)x$(size) random matrices"
+    @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulclk")
+end
 
 @cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")
 @timeit_init(sleep(0.01),   [],"sleep_p01_time","time of sleep for .01s","sleep")
-@cputimeit_init(sleep(10.0),[],"sleep_10_cput", "CPU time of sleep for 10s","sleep")
-@timeit_init(sleep(10.0),   [],"sleep_10_time", "time of sleep for 10s","sleep")
+@cputimeit_init(sleep(1.0),[],"sleep_1_cput", "CPU time of sleep for 1s","sleep")
+@timeit_init(sleep(1.0),   [],"sleep_1_time", "time of sleep for 1s","sleep")
 
 # Send system data to codespeed
 @output_timings(Sys.CPU_CORES,          "Sys.cores","number of CPU cores","")
