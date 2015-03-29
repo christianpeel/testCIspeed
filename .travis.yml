@@ -1,8 +1,5 @@
-machine:  
-  timezone:
-    America/Los_Angeles
-before_install:
-  - export TZ=America/Los_Angeles
+#before_install:
+#  - export TZ=America/Los_Angeles
 language: julia
 notifications:
     email: false

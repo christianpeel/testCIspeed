@@ -1,6 +1,6 @@
-machine:  
-  timezone:
-    America/Los_Angeles
+#machine:  
+#  timezone:
+#    America/Los_Angeles
 dependencies:
   pre:
     #- bash install.sh
