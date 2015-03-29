@@ -20,6 +20,9 @@ for size in [2^6,2^16]
     # name = "$(typename)_$(size)_$(string(s)[1:end-5])_random"
     # desc = "$(string(s)) run on $(size) $(typename) elements in random order"
     # @cputimeit_init(sort!(data), randfn!(data), name, "", "sort")
+    name = "sort_$(size)_usertime"
+    desc = "user-timed sort on $(size) $(typename) list in random order"
+    @usertimeit_init(sort!(data), randfn!(data), name, desc, "sortUSER")
     name = "sort_$(size)_cputime"
     desc = "cpu-timed sort on $(size) $(typename) list in random order"
     @cputimeit_init(sort!(data), randfn!(data), name, desc, "sortCPU")
@@ -35,22 +38,28 @@ end
 #     @cputimeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftCPU")
 #     name = "fft_$(size)_clktime"
 #     desc = "clock-timed fft on $(size) vector of randn"
-#     @cputimeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftclk")
+#     @timeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftclk")
 # end
 for size in [2^5,2^7]
     gc()
+    name = "matMul_$(size)_usrtime"
+    desc = "user time for matrix multiply on $(size)x$(size) random matrices"
+    @usertimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulUSR")
     name = "matMul_$(size)_cputime"
-    desc = "cpu-timed matrix multiply on $(size)x$(size) random matrices"
+    desc = "cpu time for matrix multiply on $(size)x$(size) random matrices"
     @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulCPU")
     name = "matMul_$(size)_clktime"
-    desc = "clock-timed matrix multiply on $(size)x$(size) random matrices"
-    @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulclk")
+    desc = "clock time for matrix multiply on $(size)x$(size) random matrices"
+    @timeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulclk")
 end
 
-@cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")
-@timeit_init(sleep(0.01),   [],"sleep_p01_time","time of sleep for .01s","sleep")
-@cputimeit_init(sleep(1.0),[],"sleep_1_cput", "CPU time of sleep for 1s","sleep")
-@timeit_init(sleep(1.0),   [],"sleep_1_time", "time of sleep for 1s","sleep")
+# @cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")
+# @timeit_init(sleep(0.01),   [],"sleep_p01_time","time of sleep for .01s","sleep")
+# @cputimeit_init(sleep(1.0),[],"sleep_1_cput", "CPU time of sleep for 1s","sleep")
+# @timeit_init(sleep(1.0),   [],"sleep_1_time", "time of sleep for 1s","sleep")
+
+# Send other data to codespeed
+@output_timings(nprocs(),"Sys.nprocs","number of cores used by Julia","")
 
 # Send system data to codespeed
 @output_timings(Sys.CPU_CORES,          "Sys.cores","number of CPU cores","")
@@ -61,5 +70,3 @@ end
 @output_timings(Sys.loadavg()[3], "Sys.load15min","load averaged over 15 minutes","")
 @output_timings(Sys.loadavg()[1], "Sys.load1min","load averaged over 1 minute","")
 
-# Send other data to codespeed
-@output_timings(nprocs(),"Sys.nprocs","number of cores used by Julia","")

@@ -38,7 +38,7 @@ begin
     # csdata["executable"] = "TestExe"
 # csdata["environment"] = chomp(readall(`hostname`))
 # csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = "TestEnv"
+    csdata["environment"] = "TestEnv2"
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
@@ -70,12 +70,12 @@ function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
     # v0.4?
     # ret = post( "http://$codespeed_host/result/add/json/", Dict("json" => json([csdata])) )
     # v0.3?
-    ret = post( "http://$codespeed_host/result/add/json/", {"json" => json([csdata])} )
+#    ret = post( "http://$codespeed_host/result/add/json/", {"json" => json([csdata])} )
     println( json([csdata]) )
-    if ret.http_code != 200 && ret.http_code != 202
-        error("Error submitting $name [HTTP code $(ret.http_code)], dumping headers and text: $(ret.headers)\n$(bytestring(ret.body))\n\n")
-        return false
-    end
+    # if ret.http_code != 200 && ret.http_code != 202
+    #     error("Error submitting $name [HTTP code $(ret.http_code)], dumping headers and text: $(ret.headers)\n$(bytestring(ret.body))\n\n")
+    #     return false
+    # end
     return true
 end
 
@@ -145,6 +145,21 @@ macro cputimeit_init(ex,init,name,desc,group...)
         for i=0:ntrials
             $(esc(init))
             e = 1000*(@CPUelapsed $(esc(ex)))
+            if i > 0
+                # warm up on first iteration
+                t[i] = e
+            end
+        end
+        @output_timings t $name $desc $group
+    end
+end
+
+macro usertimeit_init(ex,init,name,desc,group...)
+    quote
+        t = zeros(ntrials)
+        for i=0:ntrials
+            $(esc(init))
+            e = 1000*(@USERelapsed $(esc(ex)))
             if i > 0
                 # warm up on first iteration
                 t[i] = e
