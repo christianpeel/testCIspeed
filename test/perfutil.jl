@@ -1,10 +1,11 @@
 const mintrials = 10
 const mintime = 2000.0
 if length(ARGS)>0
-    environment = ARGS[1]
+    executable = ARGS[1]
 else
-    environment = "TestEnv"
+    executable = "Test"
 end
+executable = executable*"Exe"
 
 #
 # Fill common JSON fields
@@ -17,7 +18,7 @@ begin
 
     repo = GitRepo(".");
 
-    println("environment: $(environment)")
+    println("executable: $(executable)")
     println("Sys.Machine: $(Sys.MACHINE)")
     println("Julia $VERSION")
     Sys.cpu_summary()
@@ -33,11 +34,11 @@ begin
     csdata["branch"] = Base.GIT_VERSION_INFO.branch
 
 #    csdata["executable"] = Sys.cpu_info()[1].model
-    csdata["executable"] = Sys.MACHINE
+    csdata["executable"] = executable
     # csdata["executable"] = "TestExe"
 # csdata["environment"] = chomp(readall(`hostname`))
 # csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = environment
+    csdata["environment"] = "TestEnv"
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
