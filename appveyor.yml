@@ -25,7 +25,7 @@ install:
 
   # Run installer silently, output to C:\projects\julia
   #- C:\projects\julia-binary.exe /S /D=C:\projects\julia
-  - julia-binary.exe
+  - julia-binary.exe /S
 
 test_script:
   # Wake codespeed.herokuapp.com up
