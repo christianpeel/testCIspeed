@@ -9,7 +9,6 @@ dependencies:
     - sudo add-apt-repository -y ppa:staticfloat/julia-deps  
     - sudo apt-get update --yes --force-yes  
     - sudo apt-get install julia --yes --force-yes
-    - julia -e  'include("juliarc.jl")'
 test:
   override:
-    - julia -e 'include("test/perf.jl")' Circle
+    - julia -e 'include("juliarc.jl"); include("test/perf.jl")' Circle
