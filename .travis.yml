@@ -1,7 +1,13 @@
+machine:  
+  timezone:
+    America/Los_Angeles
+before_install:
+  - export TZ=America/Los_Angeles
 language: julia
 notifications:
     email: false
 script:
   # Wake codespeed.herokuapp.com up
   - curl -o tmp.html codespeed.herokuapp.com
+  - date
   - julia -e 'include("juliarc.jl"); include("test/perf.jl")' Travis
