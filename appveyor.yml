@@ -32,3 +32,4 @@ test_script:
   - ps: (new-object net.webclient).DownloadFile($("http://codespeed.herokuapp.com/")
   #- curl -o tmp.html codespeed.herokuapp.com
   - bin\julia -e 'include("juliarc.jl"); include("test/perf.jl")' Appveyor
+
