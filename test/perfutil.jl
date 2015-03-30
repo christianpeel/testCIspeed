@@ -29,7 +29,6 @@ begin
     csdata = Dict()
     csdata["commitid"] = hex(LibGit2.revparse(repo,"HEAD"))
     csdata["project"] = "Julia $VERSION"
-    #csdata["project"] = "Julia0"
     # to-do: branch for this repo (LibGit2), rather than from Base
     csdata["branch"] = Base.GIT_VERSION_INFO.branch
 
@@ -38,7 +37,7 @@ begin
     # csdata["executable"] = "TestExe"
 # csdata["environment"] = chomp(readall(`hostname`))
 # csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = "TestEnv2"
+    csdata["environment"] = "TestEnv3"
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
@@ -58,7 +57,14 @@ function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
 
     csdata["benchmark"] = name
     csdata["description"] = desc
-    csdata["result_value"] = mean(vals)
+    println(vals)
+    if length(vals)>1
+        valNZ = filter(x->x>0.0,vals)
+        result_value = length(valNZ)>0.0?minimum(valNZ):0.0
+    else
+        result_value = vals
+    end
+    csdata["result_value"] = result_value
     csdata["std_dev"] = length(vals)==1? 0.0: std(vals)
     csdata["min"] = minimum(vals)
     csdata["max"] = maximum(vals)
@@ -66,7 +72,7 @@ function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
     csdata["units_title"] = test_group
     csdata["lessisbetter"] = lessisbetter
 
-    println( "$name: $(mean(vals))" )
+    println( "$name: $(result_value)" )
     # v0.4?
     # ret = post( "http://$codespeed_host/result/add/json/", Dict("json" => json([csdata])) )
     # v0.3?

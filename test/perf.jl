@@ -4,7 +4,7 @@ include("perfutil.jl")
 # Just in case any BLAS calls are made.
 blas_set_num_threads(1);
 
-ntrials = 5;
+ntrials = 10;
 
 # Do some sort tests
 randstr_fn!(str_len::Int) =

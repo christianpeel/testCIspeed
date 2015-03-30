@@ -6,7 +6,9 @@ Pkg.add("JSON")
 Pkg.add("HTTPClient")
 Pkg.add("LibGit2")
 Pkg.add("Dates")
-Pkg.clone("git://github.com/christianpeel/USERTime.jl.git")
+try    Pkg.installed("USERTime")
+catch  Pkg.clone("git://github.com/christianpeel/USERTime.jl.git")
+end
 
 using CPUTime
 using USERTime
