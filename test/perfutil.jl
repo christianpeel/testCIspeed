@@ -52,7 +52,6 @@ end
 # description, unit and whether less is better
 function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
     # Points to the server
-    #codespeed_host = "julia-codespeed.csail.mit.edu"
     codespeed_host = "codespeed.herokuapp.com"
 
     csdata["benchmark"] = name

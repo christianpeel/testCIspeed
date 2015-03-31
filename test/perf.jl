@@ -22,7 +22,7 @@ for size in [2^6,2^16]
     # @cputimeit_init(sort!(data), randfn!(data), name, "", "sort")
     name = "sort_$(size)_nogctime"
     desc = "NoGC timed sort on $(size) $(typename) list in random order"
-    @nogctimeit_init(sort!(data), randfn!(data), name, desc, "sortNoGC")
+    @noGCtimeit_init(sort!(data), randfn!(data), name, desc, "sortNoGC")
     name = "sort_$(size)_usertime"
     desc = "user-timed sort on $(size) $(typename) list in random order"
     @usertimeit_init(sort!(data), randfn!(data), name, desc, "sortUSER")
@@ -47,7 +47,7 @@ for size in [2^5,2^7]
     gc()
     name = "matMul_$(size)_nogctime"
     desc = "NoGC time for matrix multiply on $(size)x$(size) random matrices"
-    @nogctimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulUSR")
+    @noGCtimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulNoGC")
     name = "matMul_$(size)_usrtime"
     desc = "user time for matrix multiply on $(size)x$(size) random matrices"
     @usertimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulUSR")
