@@ -37,7 +37,7 @@ begin
     # csdata["executable"] = "TestExe"
 # csdata["environment"] = chomp(readall(`hostname`))
 # csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = "TestEnv3"
+    csdata["environment"] = "TestEnv4"
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
@@ -60,7 +60,7 @@ function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
     println(vals)
     if length(vals)>1
         valNZ = filter(x->x>0.0,vals)
-        result_value = length(valNZ)>0.0?minimum(valNZ):0.0
+        result_value = length(valNZ)>0?minimum(valNZ):0.0
     else
         result_value = vals
     end
@@ -145,6 +145,26 @@ macro timeit_init(ex,init,name,desc,group...)
     end
 end
 
+macro noGCtimeit_init(ex,init,name,desc,group...)
+    quote
+        t = zeros(ntrials)
+        for i=0:ntrials
+            $(esc(init))
+            e = 0.0;
+            try
+                gc_disable()
+                e = 1000*(@elapsed $(esc(ex)))
+            finally
+                gc_enable()
+            end
+            if i > 0
+                # warm up on first iteration
+                t[i] = e
+            end
+        end
+        @output_timings t $name $desc $group
+    end
+end
 macro cputimeit_init(ex,init,name,desc,group...)
     quote
         t = zeros(ntrials)
