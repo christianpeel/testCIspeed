@@ -21,18 +21,18 @@ for size in [2^8,2^16]
     # name = "$(typename)_$(size)_$(string(s)[1:end-5])_random"
     # desc = "$(string(s)) run on $(size) $(typename) elements in random order"
     # @cputimeit_init(sort!(data), randfn!(data), name, "", "sort")
-    name = "sort_$(size)_nogctime"
-    desc = "NoGC timed sort on $(size) $(typename) list in random order"
-    @noGCtimeit_init(sort!(data), randfn!(data), name, desc, "sortNoGC")
-    name = "sort_$(size)_usertime"
-    desc = "user-timed sort on $(size) $(typename) list in random order"
-    @usertimeit_init(sort!(data), randfn!(data), name, desc, "sortUSER")
-    name = "sort_$(size)_cputime"
-    desc = "cpu-timed sort on $(size) $(typename) list in random order"
-    @cputimeit_init(sort!(data), randfn!(data), name, desc, "sortCPU")
     name = "sort_$(size)_clktime"
     desc = "clock-timed sort on $(size) $(typename) list in random order"
     @timeit_init(sort!(data), randfn!(data), name, desc, "sort")
+    name = "sort_$(size)_nogctime"
+    desc = "NoGC timed sort on $(size) $(typename) list in random order"
+    @noGCtimeit_init(sort!(data), randfn!(data), name, desc, "sortNoGC")
+    name = "sort_$(size)_cputime"
+    desc = "cpu-timed sort on $(size) $(typename) list in random order"
+    @cputimeit_init(sort!(data), randfn!(data), name, desc, "sortCPU")
+    name = "sort_$(size)_usertime"
+    desc = "user-timed sort on $(size) $(typename) list in random order"
+    @usertimeit_init(sort!(data), randfn!(data), name, desc, "sortUSER")
 end
 
 # for size in [2^6,2^16]
@@ -46,6 +46,9 @@ end
 # end
 for size in [2^6,2^8]
     gc()
+    name = "matMul_$(size)_clktime"
+    desc = "clock time for matrix multiply on $(size)x$(size) random matrices"
+    @timeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulclk")
     name = "matMul_$(size)_nogctime"
     desc = "NoGC time for matrix multiply on $(size)x$(size) random matrices"
     @noGCtimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulNoGC")
@@ -55,9 +58,6 @@ for size in [2^6,2^8]
     name = "matMul_$(size)_cputime"
     desc = "cpu time for matrix multiply on $(size)x$(size) random matrices"
     @cputimeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulCPU")
-    name = "matMul_$(size)_clktime"
-    desc = "clock time for matrix multiply on $(size)x$(size) random matrices"
-    @timeit_init(randn(size,size)*randn(size,size), 1, name, desc, "matMulclk")
 end
 
 # @cputimeit_init(sleep(0.01),[],"sleep_p01_cput","CPU time of sleep for .01s","sleep")

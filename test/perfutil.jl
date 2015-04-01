@@ -56,15 +56,16 @@ function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
 
     csdata["benchmark"] = name
     csdata["description"] = desc
-    println(vals)
     if length(vals)>1
         valNZ = sort!(filter(x->x>0.0,vals))
         nNZ = length(valNZ)
         valMn = valNZ[max(round(nNZ/3),1):nNZ-floor(nNZ/3)]
         result_value = length(valNZ)>0?mean(valMn):0.0
     else
+        valMn = vals
         result_value = vals
     end
+    println(valMn)
     csdata["result_value"] = result_value
     csdata["std_dev"] = length(vals)==1? 0.0: std(vals)
     csdata["min"] = minimum(vals)
@@ -154,7 +155,7 @@ macro noGCtimeit_init(ex,init,name,desc,group...)
             e = 0.0;
             try
                 gc_disable()
-                e = 1000*(@elapsed $(esc(ex)))
+                e = 1000*(@USERelapsed $(esc(ex)))
             finally
                 gc_enable()
             end
