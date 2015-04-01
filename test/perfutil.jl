@@ -37,7 +37,7 @@ begin
     # csdata["executable"] = "TestExe"
 # csdata["environment"] = chomp(readall(`hostname`))
 # csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = "TestEnv4"
+    csdata["environment"] = "TestEnv5"
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
@@ -58,8 +58,10 @@ function submit_to_codespeed(vals,name,desc,unit,test_group,lessisbetter=true)
     csdata["description"] = desc
     println(vals)
     if length(vals)>1
-        valNZ = filter(x->x>0.0,vals)
-        result_value = length(valNZ)>0?minimum(valNZ):0.0
+        valNZ = sort!(filter(x->x>0.0,vals))
+        nNZ = length(valNZ)
+        valMn = valNZ[max(round(nNZ/3),1):nNZ-floor(nNZ/3)]
+        result_value = length(valNZ)>0?mean(valMn):0.0
     else
         result_value = vals
     end

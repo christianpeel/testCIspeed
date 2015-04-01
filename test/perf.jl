@@ -1,3 +1,4 @@
+tic();
 #import Base.Sort: QuickSort, MergeSort, InsertionSort
 include("perfutil.jl")
 
@@ -11,7 +12,7 @@ randstr_fn!(str_len::Int) =
     d -> (for i = 1:length(d); d[i] = randstring(str_len); end; d)
 typename = "String_10";
 randfn! = randstr_fn!(10);
-for size in [2^6,2^16]
+for size in [2^8,2^16]
     data = Array(String, size)
     gc()
 
@@ -43,7 +44,7 @@ end
 #     desc = "clock-timed fft on $(size) vector of randn"
 #     @timeit_init(fft(randn(size,1)), fft(randn(size,1)), name, desc, "fftclk")
 # end
-for size in [2^5,2^7]
+for size in [2^6,2^8]
     gc()
     name = "matMul_$(size)_nogctime"
     desc = "NoGC time for matrix multiply on $(size)x$(size) random matrices"
@@ -70,9 +71,14 @@ end
 # Send system data to codespeed
 @output_timings(Sys.CPU_CORES,          "Sys.cores","number of CPU cores","")
 @output_timings(Sys.cpu_info()[1].speed,"Sys.cpuMHz","cpu speed (MHz)","")
-@output_timings(Sys.WORD_SIZE,          "Sys.wordSize","word size","")
+#@output_timings(Sys.WORD_SIZE,          "Sys.wordSize","word size","")
 @output_timings(Sys.free_memory()/1e9,  "Sys.freeMem", "free memory (Gb)","")
 @output_timings(Sys.total_memory()/1e9, "Sys.totalMem","total memory (Gb)","")
 @output_timings(Sys.loadavg()[3], "Sys.load15min","load averaged over 15 minutes","")
 @output_timings(Sys.loadavg()[1], "Sys.load1min","load averaged over 1 minute","")
+
+ttot = toq();
+println("Total time = $(ttot)")
+@output_timings(ttot, "Sys.totalTime","Total Time for tests","")
+
 
