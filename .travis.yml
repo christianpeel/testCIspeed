@@ -8,3 +8,6 @@ script:
   - curl -o tmp.html codespeed.herokuapp.com
   - date
   - julia -e 'include("juliarc.jl"); include("test/perf.jl")' Travis
+after_success:
+  - which git
+  - which latex
