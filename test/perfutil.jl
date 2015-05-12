@@ -37,7 +37,7 @@ begin
     # csdata["executable"] = "TestExe"
 # csdata["environment"] = chomp(readall(`hostname`))
 # csdata["environment"] = Sys.MACHINE
-    csdata["environment"] = "TestEnv5"
+    csdata["environment"] = "TestEnv6"
     aa = now();
     dateAndTime = @sprintf("%d-%d-%d %d:%d:%d",year(aa),month(aa),day(aa),
                                                hour(aa),minute(aa),second(aa))
